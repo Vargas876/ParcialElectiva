@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express from 'express';
 import connectDB from './config/connect-db.mjs';
 import authRoutes from './routes/authRoutes.mjs';
@@ -6,11 +5,6 @@ import productRoutes from './routes/productRoutes.mjs';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Middlewares
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Conectar a MongoDB
 connectDB();
@@ -30,13 +24,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 
-// Manejo de errores 404
-app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        message: 'Ruta no encontrada'
-    });
-});
+
 
 // Iniciar servidor
 app.listen(PORT, () => {

@@ -1,7 +1,54 @@
 import User from '../models/User.mjs';
 import { generateToken } from '../utils/tokenUtils.mjs';
 
-// Login de usuario
+// Función de registro
+export const register = async (req, res) => {
+    try {
+        const { name, email, password, role } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Nombre, email y contraseña son obligatorios'
+            });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: 'El email ya está registrado'
+            });
+        }
+
+        const user = await User.create({
+            name,
+            email,
+            password,
+            role: role || 'employee',
+            status: 'active'
+        });
+
+        res.status(201).json({
+            success: true,
+            message: 'Usuario creado exitosamente',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al crear usuario',
+            error: error.message
+        });
+    }
+};
+
+// Función de login 
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -53,7 +100,7 @@ export const login = async (req, res) => {
     }
 };
 
-// Verificar token
+// Función de verificación de token
 export const verifyTokenController = async (req, res) => {
     try {
         const user = req.user;

@@ -175,3 +175,49 @@ export const getInventoryHistory = async (req, res) => {
         });
     }
 };
+export const createProduct = async (req, res) => {
+    try {
+        const {
+            name,
+            description,
+            category,
+            price,
+            stock,
+            minStock,
+            brand,
+            petType
+        } = req.body;
+
+        // Validaciones
+        if (!name || !description || !category || !price || !brand) {
+            return res.status(400).json({
+                success: false,
+                message: 'Faltan campos obligatorios'
+            });
+        }
+
+        const product = await Product.create({
+            name,
+            description,
+            category,
+            price,
+            stock: stock || 0,
+            minStock: minStock || 10,
+            brand,
+            petType: petType || 'todos',
+            status: 'active'
+        });
+
+        res.status(201).json({
+            success: true,
+            message: 'Producto creado exitosamente',
+            data: product
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al crear producto',
+            error: error.message
+        });
+    }
+};

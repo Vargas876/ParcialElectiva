@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+    createProduct,
     getInventoryHistory,
     getProductById,
     getProducts,
@@ -14,6 +15,7 @@ router.get('/', getProducts);
 router.get('/:id', getProductById);
 
 // Rutas protegidas (requieren autenticación)
+router.post('/', authenticate, createProduct);
 router.post('/:id/inventory', authenticate, updateInventory);
 router.get('/:id/history', authenticate, getInventoryHistory);
 

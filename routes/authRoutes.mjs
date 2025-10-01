@@ -1,8 +1,11 @@
 import express from 'express';
-import { login, verifyTokenController } from '../controllers/authController.mjs';
+import { login, register, verifyTokenController } from '../controllers/authController.mjs';
 import { authenticate } from '../middlewares/authMiddleware.mjs';
 
 const router = express.Router();
+
+// POST /api/auth/register (NUEVA)
+router.post('/register', register);
 
 // POST /api/auth/login
 router.post('/login', login);
